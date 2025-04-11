@@ -10,6 +10,7 @@ import io.github.sseregit.springchatplatform.domain.auth.model.response.CreateUs
 import io.github.sseregit.springchatplatform.domain.repository.UserRepository;
 import io.github.sseregit.springchatplatform.domain.repository.entity.User;
 import io.github.sseregit.springchatplatform.domain.repository.entity.UserCredentials;
+import io.github.sseregit.springchatplatform.security.Hasher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final Hasher hasher;
 
     @Transactional(transactionManager = "createUserTransactionManager")
     public CreateUserResponse createUser(CreateUserRequest request) {
@@ -52,6 +54,13 @@ public class AuthService {
     }
 
     private UserCredentials newUserCredentials(String password, User user) {
-        return null;
+
+        String hashedValue = hasher.getHashingValue(password);
+
+        return UserCredentials
+            .builder()
+            .user(user)
+            .hashedPassword(hashedValue)
+            .build();
     }
 }
