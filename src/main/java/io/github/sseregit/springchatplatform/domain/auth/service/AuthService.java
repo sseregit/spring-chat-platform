@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.github.sseregit.springchatplatform.common.exception.CustomException;
 import io.github.sseregit.springchatplatform.domain.auth.model.request.CreateUserRequest;
+import io.github.sseregit.springchatplatform.domain.auth.model.request.LoginRequest;
 import io.github.sseregit.springchatplatform.domain.auth.model.response.CreateUserResponse;
+import io.github.sseregit.springchatplatform.domain.auth.model.response.LoginResponse;
 import io.github.sseregit.springchatplatform.domain.repository.UserRepository;
 import io.github.sseregit.springchatplatform.domain.repository.entity.User;
 import io.github.sseregit.springchatplatform.domain.repository.entity.UserCredentials;
@@ -24,6 +26,26 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final Hasher hasher;
+
+    public LoginResponse login(LoginRequest request) {
+        User user = userRepository.findByName(request.name())
+            .orElseThrow(() -> {
+                log.error("User {} not found", request.name());
+                throw new CustomException(NOT_EXIST_USER);
+            });
+
+        if (isPasswordMatch(request.password(), user.getUserCredentials().getHashedPassword())) {
+            return new LoginResponse(SUCCESS, "Token");
+        }
+
+        throw new CustomException(MISS_MATCH_PASSWORD);
+    }
+
+    private boolean isPasswordMatch(String requestPassword, String userHashedPassword) {
+        String hashedValue = hasher.getHashingValue(requestPassword);
+
+        return userHashedPassword.equals(hashedValue);
+    }
 
     @Transactional(transactionManager = "createUserTransactionManager")
     public CreateUserResponse createUser(CreateUserRequest request) {
