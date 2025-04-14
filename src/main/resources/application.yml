@@ -18,6 +18,6 @@ spring:
 
 token:
   secret-key: "SECRET"
-  refresh-secret-key: "REFRESH_SECRET"
-  token-time: 300
-  refresh-token-time: 300
+  refresh-key: "REFRESH_SECRET"
+  token-time-for-minutes: 300
+  refresh-time-for-minutes: 300
