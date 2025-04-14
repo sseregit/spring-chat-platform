@@ -1,10 +1,13 @@
 package io.github.sseregit.springchatplatform.domain.auth.service;
 
+import static io.github.sseregit.springchatplatform.common.exception.ErrorCode.*;
+
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.github.sseregit.springchatplatform.common.exception.CustomException;
 import io.github.sseregit.springchatplatform.domain.auth.model.request.CreateUserRequest;
 import io.github.sseregit.springchatplatform.domain.auth.model.response.CreateUserResponse;
 import io.github.sseregit.springchatplatform.domain.repository.UserRepository;
@@ -27,7 +30,8 @@ public class AuthService {
         Optional<User> user = userRepository.findByName(request.name());
 
         if (user.isPresent()) {
-
+            log.error("User {} already exists", request.name());
+            throw new CustomException(USER_ALREADY_EXISTS);
         }
 
         try {
@@ -38,10 +42,12 @@ public class AuthService {
             User savedUser = userRepository.save(newUser);
 
             if (savedUser == null) {
-
+                log.error("Failed to create user {}", request.name());
+                throw new CustomException(USER_SAVED_FAILED);
             }
         } catch (Exception e) {
-
+            log.error("Failed to create user {}", request.name());
+            throw new CustomException(USER_SAVED_FAILED);
         }
 
         return new CreateUserResponse(request.name());
