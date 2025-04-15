@@ -6,6 +6,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.util.StringUtils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -77,6 +78,14 @@ public class JWTProvider {
 
     public DecodedJWT decodedJWT(String token) {
         return JWT.decode(token);
+    }
+
+    public String extractToken(String header) {
+        if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
+            return header.substring(7);
+        }
+
+        throw new IllegalArgumentException("Invalid Auth header");
     }
 
     public String getUserFromToken(String token) {
