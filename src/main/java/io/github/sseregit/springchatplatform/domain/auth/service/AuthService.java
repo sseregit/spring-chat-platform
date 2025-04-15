@@ -16,6 +16,7 @@ import io.github.sseregit.springchatplatform.domain.repository.UserRepository;
 import io.github.sseregit.springchatplatform.domain.repository.entity.User;
 import io.github.sseregit.springchatplatform.domain.repository.entity.UserCredentials;
 import io.github.sseregit.springchatplatform.security.Hasher;
+import io.github.sseregit.springchatplatform.security.JWTProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +27,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final Hasher hasher;
+    private final JWTProvider jwtProvider;
 
     public LoginResponse login(LoginRequest request) {
         User user = userRepository.findByName(request.name())
@@ -35,7 +37,8 @@ public class AuthService {
             });
 
         if (isPasswordMatch(request.password(), user.getUserCredentials().getHashedPassword())) {
-            return new LoginResponse(SUCCESS, "Token");
+            String token = jwtProvider.createToken(user.getName());
+            return new LoginResponse(SUCCESS, token);
         }
 
         throw new CustomException(MISS_MATCH_PASSWORD);
@@ -45,6 +48,10 @@ public class AuthService {
         String hashedValue = hasher.getHashingValue(requestPassword);
 
         return userHashedPassword.equals(hashedValue);
+    }
+
+    public String getUserFromToken(String token) {
+        return jwtProvider.getUserFromToken(token);
     }
 
     @Transactional(transactionManager = "createUserTransactionManager")
