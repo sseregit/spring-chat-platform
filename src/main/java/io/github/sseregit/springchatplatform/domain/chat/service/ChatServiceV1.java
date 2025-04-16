@@ -1,5 +1,6 @@
 package io.github.sseregit.springchatplatform.domain.chat.service;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class ChatServiceV1 {
             from, to);
 
         List<Message> res = chats.stream()
+            .sorted(Comparator.comparing(Chat::getTID))
             .map(chat -> new Message(chat.getReceiver(), chat.getSender(), chat.getMessage()))
             .toList();
 
