@@ -18,7 +18,7 @@ public class ChatServiceV1 {
     private final ChatRepository chatRepository;
 
     public ChatListResponse chatList(String from, String to) {
-        List<Chat> chats = chatRepository.findTop10BySenderOrReceiverOrderByTIdDesc(
+        List<Chat> chats = chatRepository.findTop10BySenderOrReceiverOrderByTIDDesc(
             from, to);
 
         List<Message> res = chats.stream()

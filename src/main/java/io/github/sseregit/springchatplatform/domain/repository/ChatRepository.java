@@ -8,7 +8,7 @@ import io.github.sseregit.springchatplatform.domain.repository.entity.Chat;
 
 public interface ChatRepository extends JpaRepository<Chat, Long> {
 
-    List<Chat> findTop10BySenderOrReceiverOrderByTIdDesc(String sender, String receiver);
+    List<Chat> findTop10BySenderOrReceiverOrderByTIDDesc(String sender, String receiver);
 
     /*@Query("""
         SELECT c
