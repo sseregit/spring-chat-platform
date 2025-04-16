@@ -4,28 +4,11 @@ import Link from "next/link";
 import {Search} from "lucide-react";
 import {cn} from "@/lib/utils";
 import {buttonVariants} from "@/components/ui/button";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-    TooltipProvider,
-} from "@/components/ui/tooltip";
-import {Avatar, AvatarImage} from "./ui/avatar";
-import {User, Message} from "@/app/data";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,} from "@/components/ui/tooltip";
+import {Message, User} from "@/app/data";
 import React from "react";
 
-import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    TextField,
-    IconButton,
-    List,
-    ListItem,
-    ListItemText,
-    Button,
-} from "@mui/material";
+import {Dialog, DialogContent, IconButton, List, ListItem, ListItemText, TextField,} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import "@mui/material/styles"; // MUI 스타일 추가
 import api from "@/lib/axios";
@@ -65,7 +48,8 @@ export const fetchUsers = async (searchQuery: string): Promise<User[]> => {
         },
     });
 
-    const names = response.data.name;
+    const names = response.data.names;
+
 
     return names.map((n: string) => searchResult(n));
 };
@@ -237,7 +221,7 @@ export function Sidebar({
                                 <span>{link.name}</span>
                                 {link.messages.length > 0 && (
                                     <span className="text-zinc-300 text-xs truncate ">
-                    {link.messages[link.messages.length - 1].name.split(" ")[0]}
+                    {link.messages[link.messages.length - 1].names.split(" ")[0]}
                                         : {link.messages[link.messages.length - 1].message}
                   </span>
                                 )}

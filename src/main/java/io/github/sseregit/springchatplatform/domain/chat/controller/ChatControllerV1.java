@@ -9,8 +9,6 @@ import io.github.sseregit.springchatplatform.domain.chat.model.response.ChatList
 import io.github.sseregit.springchatplatform.domain.chat.service.ChatServiceV1;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 @Tag(name = "Chat API", description = "V1 Chat API")
@@ -27,8 +25,8 @@ public class ChatControllerV1 {
     )
     @GetMapping("/chat-list")
     public ChatListResponse chatList(
-        @RequestParam("from") @NotBlank @NotNull String from,
-        @RequestParam("name") @NotBlank @NotNull String to
+        @RequestParam("name") String to,
+        @RequestParam("from") String from
     ) {
         return chatServiceV1.chatList(from, to);
     }

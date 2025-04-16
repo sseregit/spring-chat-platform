@@ -38,6 +38,7 @@ public class AuthService {
 
         if (isPasswordMatch(request.password(), user.getUserCredentials().getHashedPassword())) {
             String token = jwtProvider.createToken(user.getName());
+            log.info("token = {}", token);
             return new LoginResponse(SUCCESS, token);
         }
 
